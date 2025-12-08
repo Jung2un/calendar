@@ -1,0 +1,119 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Pretendard 폰트 */
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 100;
+  font-style: normal;
+  src: url('/fonts/woff2/Pretendard-Thin.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 200;
+  font-style: normal;
+  src: url('/fonts/woff2/Pretendard-ExtraLight.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 300;
+  font-style: normal;
+  src: url('/fonts/woff2/Pretendard-Light.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 400;
+  font-style: normal;
+  src: url('/fonts/woff2/Pretendard-Regular.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 500;
+  font-style: normal;
+  src: url('/fonts/woff2/Pretendard-Medium.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 600;
+  font-style: normal;
+  src: url('/fonts/woff2/Pretendard-SemiBold.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 700;
+  font-style: normal;
+  src: url('/fonts/woff2/Pretendard-Bold.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 800;
+  font-style: normal;
+  src: url('/fonts/woff2/Pretendard-ExtraBold.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 900;
+  font-style: normal;
+  src: url('/fonts/woff2/Pretendard-Black.woff2') format('woff2');
+  font-display: swap;
+}
+
+html,
+body,
+#__next {
+  height: 100%;
+}
+
+body {
+  font-family:
+    'Pretendard',
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    Roboto,
+    'Helvetica Neue',
+    'Segoe UI',
+    'Apple SD Gothic Neo',
+    'Noto Sans KR',
+    'Malgun Gothic',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 스크롤바 스타일링 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: oklch(88.5% 0.062 18.334);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(80.8% 0.114 19.571);
+}

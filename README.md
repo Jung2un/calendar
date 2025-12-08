@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Calendar
+
+## Overview
+
+개인 일정 관리 웹 애플리케이션입니다. React 19와 Next.js 16을 기반으로 구축되었으며, 직관적인 인터페이스와 반응형 디자인을 제공합니다.
+
+### 주요 기능
+
+- 공휴일 자동 표시
+- 월별 달력 화면 제공
+- 모바일 반응형 UI 지원
+- 일정 생성·수정·삭제 가능
+- 여러 날짜에 걸친 일정 지원
+- 드래그 앤 드롭으로 날짜 범위 선택
+- 사용자별 일정 관리 (DB 연동 예정, 현재 로컬 스토리지 기반)
 
 ## Getting Started
 
-First, run the development server:
+### Install dependencies
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+git clone <repository-url>
+cd 프로젝트명
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Folder Structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+src/
+├── app/
+│   ├── calendar/               # 캘린더 페이지
+│   ├── globals.css             # 전역 스타일
+│   ├── layout.tsx              # 루트 레이아웃
+│   └── page.tsx                # 홈페이지 (리다이렉트)
+├── components/
+│   ├── calendar/               # 캘린더 관련 컴포넌트
+│   │   ├── CalendarGrid.tsx    # 캘린더 그리드
+│   │   ├── CalendarHeader.tsx  # 캘린더 헤더
+│   │   ├── DayCell.tsx         # 날짜 셀
+│   │   ├── EventModal.tsx      # 일정 모달
+│   │   ├── EventSidebar.tsx    # 일정 사이드바
+│   │   └── LoginModal.tsx      # 로그인 모달
+│   └── common/
+│       ├── Modal.tsx           # 기본 모달
+│       └── UserMenu.tsx        # 사용자 메뉴
+├── hooks/
+│   ├── useAuth.ts              # 인증 관리
+│   ├── useCalendar.ts          # 캘린더 로직
+│   ├── useDragSelection.ts     # 드래그 선택
+│   ├── useEventModal.ts        # 이벤트 모달 상태
+│   └── useHolidays.ts          # 공휴일 데이터
+├── lib/
+│   ├── motionVariants.ts       # Framer Motion 애니메이션
+│   ├── queryClient.ts          # React Query 설정
+│   ├── queryProvider.tsx       # Query Provider
+│   └── uid.ts                  # 고유 ID 생성
+├── types/
+│   └── event.ts           # 이벤트 타입
+└── utils/
+    ├── colors.ts          # 색상 관리
+    ├── dateUtils.ts       # 날짜 유틸리티
+    └── storage.ts         # 로컬 스토리지 관리
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Tech Stack
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+![](https://img.shields.io/badge/node-ffffff?style=flat&logo=Node.js)
+![](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=TypeScript&logoColor=ffffff)
+![](https://img.shields.io/badge/next.js-000000?style=flat&logo=nextdotjs&logoColor=ffffff)
+![](https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black)
+![](https://img.shields.io/badge/Tailwind_CSS-grey?style=flat&logo=tailwind-css&logoColor=38B2AC)
+![](https://img.shields.io/badge/TanStack_Query-FF4154?style=flat&logo=TanStack&logoColor=ffffff)
+![](https://img.shields.io/badge/framer_motion-ffca28?style=flat&logo=framer&logoColor=%23ffffff&color=%237178f6)
+![](https://img.shields.io/badge/ESLint-4B32C3?style=flat&logo=ESLint&logoColor=ffffff)
+![](https://img.shields.io/badge/Prettier-F7B93E?style=flat&logo=Prettier&logoColor=ffffff)
