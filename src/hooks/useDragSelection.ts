@@ -1,7 +1,7 @@
-import { useState, useCallback } from "react";
-import { formatDateSafe, getDatesBetween } from "../utils/dateUtils";
+import { useState } from 'react';
+import { format } from 'date-fns';
 
-export type DragState = {
+type DragState = {
   isActive: boolean;
   startDate: Date | null;
   endDate: Date | null;
@@ -16,30 +16,41 @@ export function useDragSelection() {
     selectedDates: [],
   });
 
-  const startDrag = useCallback((date: Date) => {
+  function startDrag(date: Date) {
     setDragState({
       isActive: true,
       startDate: date,
       endDate: date,
-      selectedDates: [formatDateSafe(date)],
+      selectedDates: [format(date, 'yyyy-MM-dd')],
     });
-  }, []);
+  }
 
-  const updateDrag = useCallback((date: Date) => {
-    setDragState((prev) => {
-      if (!prev.isActive || !prev.startDate) return prev;
+  function updateDrag(date: Date) {
+    if (!dragState.isActive || !dragState.startDate) return;
 
-      const selectedDates = getDatesBetween(prev.startDate, date);
+    const start = dragState.startDate;
+    const end = date;
 
-      return {
-        ...prev,
-        endDate: date,
-        selectedDates,
-      };
+    // 시작과 끝 날짜 사이의 모든 날짜 계산
+    const min = start < end ? start : end;
+    const max = start < end ? end : start;
+
+    const dates: string[] = [];
+    const current = new Date(min);
+
+    while (current <= max) {
+      dates.push(format(current, 'yyyy-MM-dd'));
+      current.setDate(current.getDate() + 1);
+    }
+
+    setDragState({
+      ...dragState,
+      endDate: date,
+      selectedDates: dates,
     });
-  }, []);
+  }
 
-  const endDrag = useCallback(() => {
+  function endDrag() {
     const result = { ...dragState };
     setDragState({
       isActive: false,
@@ -48,16 +59,16 @@ export function useDragSelection() {
       selectedDates: [],
     });
     return result;
-  }, [dragState]);
+  }
 
-  const cancelDrag = useCallback(() => {
+  function cancelDrag() {
     setDragState({
       isActive: false,
       startDate: null,
       endDate: null,
       selectedDates: [],
     });
-  }, []);
+  }
 
   return {
     dragState,

@@ -1,8 +1,9 @@
 import React from 'react';
-import QueryProvider from '@/lib/queryProvider';
+import { Providers } from './providers';
+import type { Metadata } from 'next';
 import './globals.css';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: '일정관리',
   description: '개인 일정 관리 웹',
 };
@@ -11,7 +12,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ko">
       <body>
-        <QueryProvider>{children}</QueryProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

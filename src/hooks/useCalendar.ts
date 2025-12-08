@@ -21,5 +21,9 @@ export function useCalendar(initial = new Date()) {
     return rows;
   }, [start, end]);
 
-  return { current, setCurrent, weeks };
+  return {
+    current,
+    setCurrent,
+    weeks,
+  };
 }

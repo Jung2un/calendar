@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Modal from '@/components/common/Modal';
-import { format, differenceInDays } from 'date-fns';
+import { format } from 'date-fns';
 import { uid } from '@/lib/uid';
-import { EventItem } from '../../types/event';
-import { getColorIndexFromString } from '../../utils/colors';
-import { formatDateSafe, getDatesBetween, parseDateSafe } from '../../utils/dateUtils';
+import { EventItem } from '@/types/event';
 
 type Props = {
   open: boolean;
@@ -13,7 +11,7 @@ type Props = {
   endDate?: Date | null;
   editingEvent?: EventItem | null;
   isEditMode?: boolean;
-  onSave: (event: EventItem | EventItem[]) => void;
+  onSave: (event: EventItem) => void;
   onUpdate?: (event: EventItem) => void;
 };
 
@@ -32,73 +30,57 @@ export default function EventModal({
 
   useEffect(() => {
     if (isEditMode && editingEvent) {
-      // 수정 시 기존 이벤트 데이터로 폼 채우기
       setTitle(editingEvent.title);
       setNotes(editingEvent.notes || '');
-    } else if (!isEditMode) {
-      // 추가 시 폼 초기화
+    } else {
       setTitle('');
       setNotes('');
     }
-  }, [isEditMode, editingEvent, targetDate]);
+  }, [isEditMode, editingEvent, open]);
 
   function handleSave() {
+    if (!targetDate) return;
+
     // 수정 모드
     if (isEditMode && editingEvent && onUpdate) {
-      const updatedEvent: EventItem = {
+      onUpdate({
         ...editingEvent,
         title: title || 'Untitled',
         notes,
-      };
-      onUpdate(updatedEvent);
+      });
       onClose();
       return;
     }
 
-    // 새 일정 추가
-    if (!targetDate) return;
-
-    // 다중 날짜 선택인 경우
+    // 다중 날짜 선택 - 1개의 이벤트로 등록
     if (endDate && endDate !== targetDate) {
       const start = targetDate < endDate ? targetDate : endDate;
       const end = targetDate < endDate ? endDate : targetDate;
       const groupId = uid('group_');
-      const startDateStr = formatDateSafe(start);
-      const endDateStr = formatDateSafe(end);
-      const colorIndex = getColorIndexFromString(groupId);
 
-      // 안전한 날짜 범위 계산
-      const dateStrings = getDatesBetween(start, end);
-      const events: EventItem[] = dateStrings.map((dateStr) => ({
+      const event: EventItem = {
         id: uid('ev_'),
-        user: 'local',
         title: title || 'Untitled',
         notes,
-        date: dateStr,
-        createdAt: new Date().toISOString(),
+        date: format(start, 'yyyy-MM-dd'), // 시작 날짜를 대표 날짜로
         groupId,
-        startDate: startDateStr,
-        endDate: endDateStr,
-        color: colorIndex.toString(),
-      }));
+        startDate: format(start, 'yyyy-MM-dd'),
+        endDate: format(end, 'yyyy-MM-dd'),
+        color: String(Math.floor(Math.random() * 5)),
+      };
 
-      onSave(events);
+      onSave(event);
     } else {
-      // 단일 날짜 선택인 경우
-      const dateStr = formatDateSafe(targetDate);
-      const eventId = uid('ev_');
-      const colorIndex = getColorIndexFromString(eventId);
-
-      const ev: EventItem = {
-        id: eventId,
-        user: 'local',
+      // 단일 날짜
+      const event: EventItem = {
+        id: uid('ev_'),
         title: title || 'Untitled',
         notes,
-        date: dateStr,
-        createdAt: new Date().toISOString(),
-        color: colorIndex.toString(),
+        date: format(targetDate, 'yyyy-MM-dd'),
+        color: String(Math.floor(Math.random() * 5)),
       };
-      onSave(ev);
+
+      onSave(event);
     }
 
     onClose();
@@ -106,14 +88,11 @@ export default function EventModal({
 
   return (
     <Modal open={open} onClose={onClose}>
-      <div className="tracking-tight">
+      <div>
         <h3 className="mb-2 text-lg font-semibold">{isEditMode ? '일정 수정' : '일정 추가'}</h3>
         <div className="mb-3 text-xs opacity-70">
           {isEditMode && editingEvent
-            ? (() => {
-                const date = parseDateSafe(editingEvent.date);
-                return format(date, 'yyyy년 M월 d일');
-              })()
+            ? format(new Date(editingEvent.date), 'yyyy년 M월 d일')
             : targetDate && endDate && endDate !== targetDate
               ? `${format(targetDate < endDate ? targetDate : endDate, 'yyyy년 M월 d일')} ~ ${format(targetDate < endDate ? endDate : targetDate, 'yyyy년 M월 d일')}`
               : targetDate
@@ -125,6 +104,7 @@ export default function EventModal({
           onChange={(e) => setTitle(e.target.value)}
           placeholder="제목"
           className="mb-2 w-full rounded border p-2 focus:outline-none focus:ring-2 focus:ring-red-100"
+          autoFocus
         />
         <textarea
           value={notes}

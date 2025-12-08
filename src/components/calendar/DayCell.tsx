@@ -1,11 +1,14 @@
 import React, { memo } from 'react';
 import { format, isSameMonth, isSameDay } from 'date-fns';
-import { EventItem } from '../../types/event';
-import { Holiday } from '../../hooks/useHolidays';
+import { EventItem } from '@/types/event';
+import { Holiday } from '@/hooks/useHolidays';
 import { motion } from 'framer-motion';
 import { fadeUp } from '@/lib/motionVariants';
-import { getEventColor } from '../../utils/colors';
-import { formatDateSafe } from '../../utils/dateUtils';
+import { getEventColor } from '@/utils/colors';
+
+function formatDateSafe(date: Date): string {
+  return format(date, 'yyyy-MM-dd');
+}
 
 type Props = {
   date: Date;
@@ -80,7 +83,7 @@ function DayCellInner({
 
       {/* 이벤트 */}
       <div className="flex w-full flex-1 flex-col gap-0.5 overflow-hidden">
-        {events.slice(0, 2).map((ev: EventItem) => {
+        {events.slice(0, 4).map((ev: EventItem) => {
           const colorIndex = ev.color ? parseInt(ev.color) : 0;
           const colors = getEventColor(colorIndex);
 
@@ -95,8 +98,8 @@ function DayCellInner({
             </motion.div>
           );
         })}
-        {events.length > 2 && (
-          <div className="px-1 text-[8px] text-slate-600 sm:text-[9px]">+{events.length - 2}</div>
+        {events.length > 4 && (
+          <div className="px-1 text-[8px] text-slate-600 sm:text-[9px]">+{events.length - 4}</div>
         )}
       </div>
     </motion.button>

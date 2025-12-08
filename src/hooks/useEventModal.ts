@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { EventItem } from "../types/event";
+import { useState } from 'react';
+import { EventItem } from '@/types/event';
 
 export function useEventModal() {
   const [open, setOpen] = useState(false);
@@ -8,19 +8,27 @@ export function useEventModal() {
   const [editingEvent, setEditingEvent] = useState<EventItem | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
 
-  function openFor(date: Date, end?: Date) {
+  function openFor(date: Date) {
     setTargetDate(date);
-    setEndDate(end || null);
+    setEndDate(null);
+    setEditingEvent(null);
+    setIsEditMode(false);
+    setOpen(true);
+  }
+
+  function openForMulti(startDate: Date, endDate: Date) {
+    setTargetDate(startDate);
+    setEndDate(endDate);
     setEditingEvent(null);
     setIsEditMode(false);
     setOpen(true);
   }
 
   function openForEdit(event: EventItem) {
+    setTargetDate(new Date(event.date));
+    setEndDate(null);
     setEditingEvent(event);
     setIsEditMode(true);
-    setTargetDate(null);
-    setEndDate(null);
     setOpen(true);
   }
 
@@ -34,12 +42,13 @@ export function useEventModal() {
 
   return {
     open,
-    openFor,
-    openForEdit,
-    close,
     targetDate,
     endDate,
     editingEvent,
     isEditMode,
+    openFor,
+    openForMulti,
+    openForEdit,
+    close,
   };
 }

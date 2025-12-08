@@ -1,12 +1,11 @@
 import React from 'react';
 import DayCell from './DayCell';
-import { EventItem } from '../../types/event';
-import { Holiday } from '../../hooks/useHolidays';
+import { EventItem } from '@/types/event';
+import { Holiday } from '@/hooks/useHolidays';
 import { motion, AnimatePresence } from 'framer-motion';
 import { slideX } from '@/lib/motionVariants';
 import { format } from 'date-fns';
-import { useDragSelection } from '../../hooks/useDragSelection';
-import { formatDateSafe, parseDateSafe } from '../../utils/dateUtils';
+import { useDragSelection } from '@/hooks/useDragSelection';
 
 type Props = {
   weeks: Date[][];
@@ -28,13 +27,21 @@ export default function CalendarGrid({
   transitionDir = 1,
 }: Props) {
   const { dragState, startDrag, updateDrag, endDrag, cancelDrag } = useDragSelection();
+
   function eventsForDay(d: Date) {
-    const key = formatDateSafe(d);
-    return events.filter((e: EventItem) => e.date === key);
+    const key = format(d, 'yyyy-MM-dd'); // 로컬 시간으로 변환
+    return events.filter((e: EventItem) => {
+      // 그룹 이벤트인 경우 startDate ~ endDate 범위 확인
+      if (e.startDate && e.endDate) {
+        return key >= e.startDate && key <= e.endDate;
+      }
+      // 단일 이벤트인 경우
+      return e.date === key;
+    });
   }
 
   function holidayForDay(d: Date) {
-    const key = formatDateSafe(d);
+    const key = format(d, 'yyyy-MM-dd');
     return holidays.find((h: Holiday) => h.date === key);
   }
 
@@ -85,7 +92,7 @@ export default function CalendarGrid({
     const dateStr = element?.getAttribute('data-date');
 
     if (dateStr) {
-      const date = parseDateSafe(dateStr);
+      const date = new Date(dateStr);
       updateDrag(date);
     }
   }
@@ -117,11 +124,10 @@ export default function CalendarGrid({
   }
 
   function isDateSelected(date: Date) {
-    const key = formatDateSafe(date);
+    const key = format(date, 'yyyy-MM-dd');
     return dragState.selectedDates.includes(key);
   }
 
-  // key 변경 시 AnimatePresence가 작동 (월 이동 시)
   const monthKey = format(currentMonth, 'yyyy-MM');
 
   return (
@@ -135,10 +141,9 @@ export default function CalendarGrid({
           variants={slideX(transitionDir)}
           className="h-full will-change-transform"
         >
-          {/* 고정된 그리드 높이 */}
-          <div className="grid h-full grid-rows-6 gap-0.5 sm:gap-2">
+          <div className="grid h-full grid-rows-6 gap-1 sm:gap-2">
             {weeks.map((week: Date[], wi: number) => (
-              <div key={wi} className="grid grid-cols-7 gap-0.5 sm:gap-2">
+              <div key={wi} className="grid grid-cols-7 gap-1 sm:gap-2">
                 {week.map((d: Date) => (
                   <DayCell
                     key={d.toISOString()}
