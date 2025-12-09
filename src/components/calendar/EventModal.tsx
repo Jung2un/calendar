@@ -118,7 +118,7 @@ export default function EventModal({
           </button>
           <button
             onClick={handleSave}
-            className="rounded rounded-full border border-red-100 bg-red-50 px-4 py-2 transition"
+            className="rounded-full border border-red-100 bg-red-50 px-4 py-2 transition"
           >
             {isEditMode ? '수정' : '저장'}
           </button>

@@ -36,7 +36,6 @@ export default function LoginModal({ open, onClose }: { open: boolean; onClose: 
   const [isSignup, setIsSignup] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -56,8 +55,7 @@ export default function LoginModal({ open, onClose }: { open: boolean; onClose: 
 
     try {
       if (isSignup) {
-        await signup(email, password, name);
-        // 회원가입 후 자동 로그인
+        await signup(email, password);
         await login(email, password);
       } else {
         await login(email, password);
@@ -79,16 +77,6 @@ export default function LoginModal({ open, onClose }: { open: boolean; onClose: 
         </div>
 
         <form onSubmit={handleSubmit}>
-          {/* {isSignup && (
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="이름 (선택)"
-              className="mb-2 w-full rounded border p-2 focus:outline-none focus:ring-2 focus:ring-red-100"
-            />
-          )} */}
-
           <input
             type="email"
             value={email}
